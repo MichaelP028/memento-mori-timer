@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memento Mori Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 20px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .progress {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      background: #4a4a4a;
+    }
+    .bar {
+      height: 20px;
+      border-radius: 10px;
+      background: #76b900;
+      transition: width 0.5s;
+    }
+  </style>
+</head>
+<body>
+  <h1>Memento Mori</h1>
+  <div class="progress">
+    <p>Jahr</p>
+    <div class="bar-container">
+      <div id="year-bar" class="bar"></div>
+    </div>
+    <p id="year-percent"></p>
+  </div>
+  <div class="progress">
+    <p>Monat</p>
+    <div class="bar-container">
+      <div id="month-bar" class="bar"></div>
+    </div>
+    <p id="month-percent"></p>
+  </div>
+  <div class="progress">
+    <p>Tag</p>
+    <div class="bar-container">
+      <div id="day-bar" class="bar"></div>
+    </div>
+    <p id="day-percent"></p>
+  </div>
+
+  <script>
+    function updateProgress() {
+      const now = new Date();
+
+      // Jahr
+      const startYear = new Date(now.getFullYear(), 0, 1);
+      const endYear = new Date(now.getFullYear() + 1, 0, 1);
+      const yearProgress = ((now - startYear) / (endYear - startYear)) * 100;
+      document.getElementById("year-bar").style.width = yearProgress + "%";
+      document.getElementById("year-percent").innerText = yearProgress.toFixed(1) + "%";
+
+      // Monat
+      const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      const monthProgress = ((now - startMonth) / (endMonth - startMonth)) * 100;
+      document.getElementById("month-bar").style.width = monthProgress + "%";
+      document.getElementById("month-percent").innerText = monthProgress.toFixed(1) + "%";
+
+      // Tag
+      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      const dayProgress = ((now - startDay) / (endDay - startDay)) * 100;
+      document.getElementById("day-bar").style.width = dayProgress + "%";
+      document.getElementById("day-percent").innerText = dayProgress.toFixed(1) + "%";
+    }
+
+    updateProgress();
+    setInterval(updateProgress, 1000);
+  </script>
+</body>
+</html>
