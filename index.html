@@ -14,51 +14,66 @@
     }
     h1 {
       font-size: 2em;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    .progress {
-      margin: 10px 0;
-      padding: 10px;
-      border-radius: 10px;
-      background: #4a4a4a;
+    .circle-container {
+      display: inline-block;
+      margin: 20px;
     }
-    .bar {
-      height: 20px;
-      border-radius: 10px;
-      background: #76b900;
-      transition: width 0.5s;
+    .circle {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      position: relative;
+      background: conic-gradient(#76b900 0%, #333333 0%);
     }
-    .bar-container {
-   width: 100%;
-   height: 20px;
-   background: #333333;
-   border-radius: 10px;
-   overflow: hidden;
- }
+    .inner-circle {
+      width: 120px;
+      height: 120px;
+      background: #121212;
+      border-radius: 50%;
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.2em;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <h1>Memento Mori</h1>
-  <div class="progress">
+  
+  <!-- Kreise -->
+  <div class="circle-container">
     <p>Jahr</p>
-    <div class="bar-container">
-      <div id="year-bar" class="bar"></div>
+    <div id="year-circle" class="circle">
+      <div class="inner-circle" id="year-percent">0%</div>
     </div>
-    <p id="year-percent"></p>
   </div>
-  <div class="progress">
+
+  <div class="circle-container">
     <p>Monat</p>
-    <div class="bar-container">
-      <div id="month-bar" class="bar"></div>
+    <div id="month-circle" class="circle">
+      <div class="inner-circle" id="month-percent">0%</div>
     </div>
-    <p id="month-percent"></p>
   </div>
-  <div class="progress">
+
+  <div class="circle-container">
     <p>Tag</p>
-    <div class="bar-container">
-      <div id="day-bar" class="bar"></div>
+    <div id="day-circle" class="circle">
+      <div class="inner-circle" id="day-percent">0%</div>
     </div>
-    <p id="day-percent"></p>
+  </div>
+
+  <div class="circle-container">
+    <p>Stunde</p>
+    <div id="hour-circle" class="circle">
+      <div class="inner-circle" id="hour-percent">0%</div>
+    </div>
   </div>
 
   <script>
@@ -69,22 +84,29 @@
       const startYear = new Date(now.getFullYear(), 0, 1);
       const endYear = new Date(now.getFullYear() + 1, 0, 1);
       const yearProgress = ((now - startYear) / (endYear - startYear)) * 100;
-      document.getElementById("year-bar").style.width = yearProgress + "%";
-      document.getElementById("year-percent").innerText = yearProgress.toFixed(1) + "%";
+      document.getElementById("year-circle").style.background = `conic-gradient(#76b900 ${yearProgress}%, #333333 ${yearProgress}%)`;
+      document.getElementById("year-percent").innerText = `${yearProgress.toFixed(1)}%`;
 
       // Monat
       const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       const monthProgress = ((now - startMonth) / (endMonth - startMonth)) * 100;
-      document.getElementById("month-bar").style.width = monthProgress + "%";
-      document.getElementById("month-percent").innerText = monthProgress.toFixed(1) + "%";
+      document.getElementById("month-circle").style.background = `conic-gradient(#76b900 ${monthProgress}%, #333333 ${monthProgress}%)`;
+      document.getElementById("month-percent").innerText = `${monthProgress.toFixed(1)}%`;
 
       // Tag
       const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       const dayProgress = ((now - startDay) / (endDay - startDay)) * 100;
-      document.getElementById("day-bar").style.width = dayProgress + "%";
-      document.getElementById("day-percent").innerText = dayProgress.toFixed(1) + "%";
+      document.getElementById("day-circle").style.background = `conic-gradient(#76b900 ${dayProgress}%, #333333 ${dayProgress}%)`;
+      document.getElementById("day-percent").innerText = `${dayProgress.toFixed(1)}%`;
+
+      // Stunde
+      const startHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours());
+      const endHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1);
+      const hourProgress = ((now - startHour) / (endHour - startHour)) * 100;
+      document.getElementById("hour-circle").style.background = `conic-gradient(#76b900 ${hourProgress}%, #333333 ${hourProgress}%)`;
+      document.getElementById("hour-percent").innerText = `${hourProgress.toFixed(1)}%`;
     }
 
     updateProgress();
@@ -92,3 +114,4 @@
   </script>
 </body>
 </html>
+
