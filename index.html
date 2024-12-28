@@ -67,7 +67,7 @@
       </svg>
       <div class="label">
         <span class="percentage" id="day-percent">0%</span>
-        <span id="day-label">Tag</span>
+        <span id="day-label">--</span>
       </div>
     </div>
     <!-- Kreis 2: Woche -->
@@ -78,7 +78,7 @@
       </svg>
       <div class="label">
         <span class="percentage" id="week-percent">0%</span>
-        <span id="week-label">Woche</span>
+        <span id="week-label">--</span>
       </div>
     </div>
     <!-- Kreis 3: Monat -->
@@ -106,12 +106,13 @@
   </div>
 
   <script>
+    // Funktion zum Aktualisieren der Kreise
     function updateProgress() {
       const now = new Date();
 
       // --- Tag
-      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // Start heute 00:00
-      const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0); // Start morgen 00:00
+      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+      const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
       const dayPercent = ((now - startDay) / (endDay - startDay)) * 100;
 
       // --- Woche
@@ -138,9 +139,12 @@
       updateCircle(document.querySelectorAll(".circle")[2], monthPercent);
       updateCircle(document.querySelectorAll(".circle")[3], yearPercent);
 
-      // --- Prozentzahlen aktualisieren
+      // --- Texte aktualisieren
+      const days = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
       document.getElementById("day-percent").innerText = dayPercent.toFixed(0) + "%";
+      document.getElementById("day-label").innerText = now.getDate() + ".";
       document.getElementById("week-percent").innerText = weekPercent.toFixed(0) + "%";
+      document.getElementById("week-label").innerText = days[now.getDay()];
       document.getElementById("month-percent").innerText = monthPercent.toFixed(0) + "%";
       document.getElementById("year-percent").innerText = yearPercent.toFixed(0) + "%";
     }
@@ -155,7 +159,7 @@
     }
 
     updateProgress();
-    setInterval(updateProgress, 1000); // Aktualisierung alle 1 Sekunde
+    setInterval(updateProgress, 1000); // Aktualisierung jede Sekunde
   </script>
 </body>
 </html>
