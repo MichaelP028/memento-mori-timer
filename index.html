@@ -3,136 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Memento Mori Progress</title>
+  <title>Memento Mori Timer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #121212;
       color: #ffffff;
-      text-align: center;
-      margin: 20px;
-    }
-    .container {
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      display: flex;
       gap: 20px;
     }
     .circle {
+      position: relative;
       width: 100px;
       height: 100px;
-      position: relative;
     }
     .circle svg {
       transform: rotate(-90deg);
-      width: 100%;
-      height: 100%;
+      width: 100px;
+      height: 100px;
     }
-    .circle .background {
+    .circle circle {
       fill: none;
-      stroke: #2e2e2e;
       stroke-width: 8;
+    }
+    .circle .bg {
+      stroke: #2e2e2e; /* Hintergrundfarbe */
     }
     .circle .progress {
-      fill: none;
-      stroke: #b49dc4;
-      stroke-width: 8;
+      stroke: #c29fff; /* Fortschrittsfarbe */
       stroke-linecap: round;
-      stroke-dasharray: 283;
-      stroke-dashoffset: 283;
-      transition: stroke-dashoffset 1s ease;
+      transition: stroke-dashoffset 0.5s ease;
     }
     .circle .label {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 14px;
+      text-align: center;
+    }
+    .label span {
+      display: block;
+    }
+    .percentage {
+      font-size: 1.2em;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Memento Mori</h1>
   <div class="container">
+    <!-- Kreis 1: Tag -->
     <div class="circle">
       <svg>
-        <circle class="background" cx="50" cy="50" r="45"></circle>
-        <circle class="progress" id="day-progress" cx="50" cy="50" r="45"></circle>
+        <circle class="bg" cx="50" cy="50" r="45"></circle>
+        <circle class="progress" cx="50" cy="50" r="45"></circle>
       </svg>
       <div class="label">
-        <span id="day-label">0%</span><br />26th
+        <span class="percentage" id="day-percent">0%</span>
+        <span id="day-label">Tag</span>
       </div>
     </div>
+    <!-- Kreis 2: Woche -->
     <div class="circle">
       <svg>
-        <circle class="background" cx="50" cy="50" r="45"></circle>
-        <circle class="progress" id="week-progress" cx="50" cy="50" r="45"></circle>
+        <circle class="bg" cx="50" cy="50" r="45"></circle>
+        <circle class="progress" cx="50" cy="50" r="45"></circle>
       </svg>
       <div class="label">
-        <span id="week-label">0%</span><br />DO.
+        <span class="percentage" id="week-percent">0%</span>
+        <span id="week-label">Woche</span>
       </div>
     </div>
+    <!-- Kreis 3: Monat -->
     <div class="circle">
       <svg>
-        <circle class="background" cx="50" cy="50" r="45"></circle>
-        <circle class="progress" id="month-progress" cx="50" cy="50" r="45"></circle>
+        <circle class="bg" cx="50" cy="50" r="45"></circle>
+        <circle class="progress" cx="50" cy="50" r="45"></circle>
       </svg>
       <div class="label">
-        <span id="month-label">0%</span><br />DEZ.
+        <span class="percentage" id="month-percent">0%</span>
+        <span id="month-label">Monat</span>
       </div>
     </div>
+    <!-- Kreis 4: Jahr -->
     <div class="circle">
       <svg>
-        <circle class="background" cx="50" cy="50" r="45"></circle>
-        <circle class="progress" id="year-progress" cx="50" cy="50" r="45"></circle>
+        <circle class="bg" cx="50" cy="50" r="45"></circle>
+        <circle class="progress" cx="50" cy="50" r="45"></circle>
       </svg>
       <div class="label">
-        <span id="year-label">0%</span><br />2024
+        <span class="percentage" id="year-percent">0%</span>
+        <span id="year-label">Jahr</span>
       </div>
     </div>
   </div>
 
   <script>
-    function setProgress(id, percent) {
-      const circle = document.getElementById(id);
-      const offset = 283 - (percent / 100) * 283;
-      circle.style.strokeDashoffset = offset;
-    }
-
     function updateProgress() {
       const now = new Date();
 
-      // Jahr
-      const startYear = new Date(now.getFullYear(), 0, 1);
-      const endYear = new Date(now.getFullYear() + 1, 0, 1);
-      const yearPercent = ((now - startYear) / (endYear - startYear)) * 100;
-      document.getElementById("year-label").innerText = yearPercent.toFixed(0) + "%";
-      setProgress("year-progress", yearPercent);
+      // --- Tag
+      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0); // Start heute 00:00
+      const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0); // Start morgen 00:00
+      const dayPercent = ((now - startDay) / (endDay - startDay)) * 100;
 
-      // Monat
+      // --- Woche
+      const startWeek = new Date(now);
+      startWeek.setDate(now.getDate() - now.getDay()); // Start Sonntag
+      startWeek.setHours(0, 0, 0, 0);
+      const endWeek = new Date(startWeek);
+      endWeek.setDate(startWeek.getDate() + 7);
+      const weekPercent = ((now - startWeek) / (endWeek - startWeek)) * 100;
+
+      // --- Monat
       const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
       const monthPercent = ((now - startMonth) / (endMonth - startMonth)) * 100;
-      document.getElementById("month-label").innerText = monthPercent.toFixed(0) + "%";
-      setProgress("month-progress", monthPercent);
 
-      // Woche
-      const dayOfWeek = now.getDay();
-      const weekPercent = (dayOfWeek / 7) * 100;
-      document.getElementById("week-label").innerText = weekPercent.toFixed(0) + "%";
-      setProgress("week-progress", weekPercent);
+      // --- Jahr
+      const startYear = new Date(now.getFullYear(), 0, 1);
+      const endYear = new Date(now.getFullYear() + 1, 0, 1);
+      const yearPercent = ((now - startYear) / (endYear - startYear)) * 100;
 
-      // Tag
-      const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const endDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-      const dayPercent = ((now - startDay) / (endDay - startDay)) * 100;
-      document.getElementById("day-label").innerText = dayPercent.toFixed(0) + "%";
-      setProgress("day-progress", dayPercent);
+      // --- Update der Kreise
+      updateCircle(document.querySelectorAll(".circle")[0], dayPercent);
+      updateCircle(document.querySelectorAll(".circle")[1], weekPercent);
+      updateCircle(document.querySelectorAll(".circle")[2], monthPercent);
+      updateCircle(document.querySelectorAll(".circle")[3], yearPercent);
+
+      // --- Prozentzahlen aktualisieren
+      document.getElementById("day-percent").innerText = dayPercent.toFixed(0) + "%";
+      document.getElementById("week-percent").innerText = weekPercent.toFixed(0) + "%";
+      document.getElementById("month-percent").innerText = monthPercent.toFixed(0) + "%";
+      document.getElementById("year-percent").innerText = yearPercent.toFixed(0) + "%";
+    }
+
+    function updateCircle(circle, percent) {
+      const radius = 45;
+      const circumference = 2 * Math.PI * radius;
+      const progress = circle.querySelector(".progress");
+      const offset = circumference - (percent / 100) * circumference;
+      progress.style.strokeDasharray = `${circumference}`;
+      progress.style.strokeDashoffset = offset;
     }
 
     updateProgress();
-    setInterval(updateProgress, 1000);
+    setInterval(updateProgress, 1000); // Aktualisierung alle 1 Sekunde
   </script>
 </body>
 </html>
-
